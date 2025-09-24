@@ -1,0 +1,302 @@
+:root{
+  /* Primary Colors 
+  --primary-color: #ffc814ff;
+  --secondary-color: #53c7d6ff;
+  --text-light: white;
+  --text-dark: #1f2b2bff;
+  --neutral-light: #334747;
+  --neutral-dark: #1f2b2bff;*/
+  --primary-color: white;
+  --secondary-color: #bfa87c;
+  --text-light: #fefefe;
+  --text-dark: #1f2b2bff;
+  --neutral-light: #660000;
+  --neutral-dark: #79242f;
+  --tertiary-color: #efbb3c;
+
+  /*calcite
+  --calcite-label-text-color:  #1f2b2bff;
+  --calcite-switch-background-color: white;
+  --calcite-switch-handle-background-color:  #1f2b2bff;
+  --calcite-slider-text-color:white;
+  --calcite-slider-track-fill-color:white;
+  --calcite-slider-handle-fill-color: #53c7d6ff;
+  --calcite-switch-background-color-hover: #ffc814ff;*/
+  --calcite-label-margin-bottom: 1px;
+  --calcite-label-text-color:  #1f2b2bff;
+  --calcite-switch-background-color: #fefefe;
+  --calcite-switch-handle-background-color:  #1f2b2bff;
+  --calcite-slider-text-color:#fefefe;
+  --calcite-slider-track-fill-color:#fefefe;
+  --calcite-slider-handle-fill-color: #efbb3c;
+  --calcite-switch-background-color-hover: #660000;
+}
+body{
+	height: 100vh;
+	padding: 0;
+ 	margin: 0;
+ 	font-family: "avenir next";
+}
+.navbar, .navbar-brand{
+  padding: 0;
+  margin: 0;
+}
+/*.navbar, .navbar-brand > h1{
+  font-size: 18px; important!;
+}*/
+.logo {
+	height: 100%;
+    margin: 0 5 0 0;
+    object-fit: contain; /* Optional: control how the image fits within its bounds */
+    }
+.logo-title{
+    font-family: "Caslon Pro";
+    font-size: 25px; important!;
+}
+.dropdown-menu-right {
+    right: 0;
+    left: auto;
+}
+.h-7{
+	height: 6%;
+}
+.h-86{
+	height:88%;
+}
+.menu-end{
+	margin-left:0;
+	margin-right:0;}
+#navRow1{
+	background-color:var(--neutral-dark);
+	
+}
+#navRow1 > h1{
+	color:var(--text-light);
+}
+#navRow2{
+	background-color:var(--neutral-light);
+
+}
+.button1 > label{
+	background-color:var(--primary-color);
+	color: var(--text-dark);
+}
+.button1 > .active{
+    background-color: var(--neutral-light) !important;
+    color: var(--text-light) !important;
+}
+.button1 > label:hover{
+	background-color:var(--secondary-color);
+}
+.button2{
+	background-color:var(--secondary-color);
+	color: var(--text-dark);
+}
+.collapser:hover{
+	background-color:var(--primary-color);
+}
+label{
+	color: var(--text-light);
+	margin-bottom: 0px;
+}
+.input-group-append > .button2:hover{
+	background-color:var(--primary-color);
+	color: var(--text-dark) !important;
+}
+span > calcite-icon {
+	margin-right: 10px;
+	margin-top: auto;
+	margin-bottom: auto;
+}
+#feature-node {
+        float: left;
+        height: 100%;
+        padding: 1em;
+        overflow: scroll;
+        display: none;
+        width: 25vw;
+        background-color:var(--neutral-dark);
+      }
+arcgis-map {
+	float: right;
+	width: 100vw;
+	height: 100%;
+	z-index: 1;
+}
+/* Styles for the slider track */
+.rangeSlider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  background: var(--text-light);
+  border-radius: 5px;
+  margin-top: 3px;
+  margin-bottom: 3px;
+}
+
+/* Styles for the slider thumb (for WebKit browsers like Chrome and Safari) */
+.rangeSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 10px; /* Adjust this value to get the desired vertical centering */
+  width: 10px; /* Adjust this value to get the desired vertical centering */
+  border-radius: 50%;
+  background: var(--tertiary-color);
+  outline: 3px solid var(--secondary-color); /* Correct property name and value */
+  cursor: pointer;
+  margin-top: -4.5px;
+}
+
+/* Styles for the slider thumb (for Firefox) */
+.rangeSlider::-moz-range-thumb {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: var(--tertiary-color);
+  outline: 3px solid var(--secondary-color);
+  cursor: pointer;
+}
+
+/* Styles for the slider thumb (for Edge) */
+.rangeSlider::-ms-thumb {
+  height: 10px;
+  width: 10px;
+  border-radius: 50%;
+  background: var(--tertiary-color);
+  outline: 3px solid var(--secondary-color);
+  cursor: pointer;
+}
+.range-slider-wrap {
+    position: relative;
+    height: 10px;
+    flex-grow: 1; /* Allows the slider to take up available space */
+}
+
+.range-slider-wrap input {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    pointer-events: none;
+    -webkit-appearance: none;
+    background: var(--text-light);
+    border: none;
+    border-radius: 5px;
+}
+
+.range-slider-wrap input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    outline: 3px solid var(--secondary-color);
+    cursor: pointer;
+    pointer-events: all;
+    z-index: 10;
+    position: relative;
+}
+
+.range-slider-wrap input::-moz-range-thumb {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    outline: 3px solid var(--secondary-color);
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.range-slider-wrap input::-ms-thumb {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    outline: 3px solid var(--secondary-color);
+    cursor: pointer;
+    pointer-events: all;
+}
+
+.slider-display {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 5px;
+}
+.slider-value-left {
+    margin-right: 5px; /* Adds space between min value and slider */
+    color: var(--text-light);
+}
+
+.slider-value-right {
+    margin-left: 5px; /* Adds space between max value and slider */
+    color: var(--text-light);
+}
+#date-slider-container > .row:first-of-type {
+    display: flex;
+    justify-content: center;
+}
+
+#date-slider-container {
+    display: flex;
+    flex-direction: column; /* Stacks children vertically */
+    justify-content: center;
+    align-items: center;
+}
+.slider-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.slider-value {
+    position: absolute;
+    top: -25px; /* Adjust this value to control how far above the slider the label appears */
+    transform: translateX(-50%);
+    white-space: nowrap;
+    font-size: 1em;
+}
+.map-floater{
+background-color:var(--text-light);
+}
+.list-group > .active {
+background-color: var(--tertiary-color)!important;
+color: var(--text-dark)!important;
+}
+.list-group-item:hover {
+background-color: var(--secondary-color)!important;
+color: var(--text-dark)!important;
+}
+.expandButton{
+z-index: 2;
+position: absolute;
+}
+
+/* This rule applies when feature-node is visible */
+.h-86 #feature-node[style*="display: block"] + .expandButton {
+    left: 25vw; /* Position button to the right of the 25vw panel */
+}
+
+.h-86 #feature-node[style*="display: block"] ~ arcgis-map {
+    width: 75vw; /* Shrink map to 75% when feature-node is visible */
+}
+h1{
+font-size: 25px;
+font-family: "Caslon Pro";
+color:var(--text-light);
+}
+h2{
+font-size: 20px;
+color:var(--text-light);
+}
+h3{
+font-size: 18px;
+margin-bottom: 2px;
+}
+#result-list>li{
+font-size: 14px;
+padding: 8px;
+background-color:var(--text-light);
+}
+.selectedBox{
+background-color:var(--text-light);
+font-size: 14px;
+padding: 8px;
+}

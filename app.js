@@ -181,9 +181,9 @@ function debounceQuery(extent) {
     }
     
     // Query all points to populate the dropdown
- pointsLayer.queryFeatures({
+pointsLayer.queryFeatures({
         where: whereClause,
-        outFields: ["orig_address_no", "orig_address_street", "OBJECTID"],
+        outFields: ["orig_address_no", "orig_address_street", "place_descript", "OBJECTID"],
         returnGeometry: false
     }).then(results => {
         const sortedFeatures = results.features.sort((a, b) => {
@@ -202,7 +202,7 @@ function debounceQuery(extent) {
                 const listItem = document.createElement("li");
                 const attributes = feature.attributes;
                 listItem.value = attributes.OBJECTID;
-                listItem.textContent = `${attributes.orig_address_no} ${attributes.orig_address_street}`;
+                listItem.textContent = `${attributes.orig_address_no} ${attributes.orig_address_street}: ${attributes.place_descript}`;
                 listItem.className = "list-group-item";
                 pointListElement.appendChild(listItem);
             });

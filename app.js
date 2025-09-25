@@ -31,6 +31,8 @@ const opacityInput = document.getElementById('sliderDiv');
 			const searchBar = document.querySelector("#searchBar");
 			const searchButton = document.querySelector("#searchButton");
 			const pointListElement = document.getElementById("point-list");
+			const mapsCounter = document.getElementById("mapsCounter");
+			const pointsCounter = document.getElementById("pointsCounter");
 			
 			viewElement.addEventListener("arcgisViewReadyChange", () => {
     // All layer, popup, and event listener declarations should go here
@@ -161,6 +163,7 @@ function debounceQuery(extent) {
     });
     
     viewElement.map.add(pointsLayer, 1);
+    
     function queryPoints(searchText) {
        const pointListElement = document.getElementById("point-list");
     pointListElement.innerHTML = ''; // Clear the list
@@ -181,7 +184,7 @@ function debounceQuery(extent) {
     }
     
     // Query all points to populate the dropdown
-pointsLayer.queryFeatures({
+ pointsLayer.queryFeatures({
         where: whereClause,
         outFields: ["orig_address_no", "orig_address_street", "place_descript", "OBJECTID"],
         returnGeometry: false
@@ -191,6 +194,8 @@ pointsLayer.queryFeatures({
             const addressB = `${b.attributes.orig_address_no} ${b.attributes.orig_address_street}`;
             return addressA.localeCompare(addressB);
         });
+        
+        pointsCounter.innerHTML = `Points (${sortedFeatures.length})`;
 
         if (sortedFeatures.length === 0) {
             const noResultsItem = document.createElement("li");
@@ -465,6 +470,8 @@ if (searchText) {
 							const sortedFeatures = results.features
 							.filter((feature) => feature.attributes.mapyear) // Ensure mapyear exists
 							.sort((a, b) => a.attributes.mapyear - b.attributes.mapyear);
+							
+							mapsCounter.innerHTML = `Maps (${sortedFeatures.length})`;
 
 							// 2. Track seen years to avoid duplicates
 							const seenYears = new Set();

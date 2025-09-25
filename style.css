@@ -300,3 +300,21 @@ background-color:var(--text-light);
 font-size: 14px;
 padding: 8px;
 }
+.selectedBox, .resultBox{
+max-height: 22vh;
+overflow-y: scroll;
+margin-bottom: 10px;
+}
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: var(--tertiary-color);
+  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+hr{
+background-color: var(--secondary-color);
+}

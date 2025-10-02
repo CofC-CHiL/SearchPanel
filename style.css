@@ -58,10 +58,10 @@ body{
     left: auto;
 }
 .h-7{
-	height: 6%;
+	height: 7%;
 }
 .h-86{
-	height:88%;
+	height:86%;
 }
 .menu-end{
 	margin-left:0;
@@ -290,7 +290,7 @@ h3{
 font-size: 18px;
 margin-bottom: 2px;
 }
-#result-list>li{
+.list-group-item{
 font-size: 14px;
 padding: 8px;
 background-color:var(--text-light);
@@ -301,7 +301,7 @@ font-size: 14px;
 padding: 8px;
 }
 .selectedBox, .resultBox{
-max-height: 22vh;
+max-height: 35vh;
 overflow-y: scroll;
 margin-bottom: 10px;
 }
@@ -317,4 +317,16 @@ margin-bottom: 10px;
 }
 hr{
 background-color: var(--secondary-color);
+}
+#pointsFilter{
+display: none;
+}
+.nav-tabs{
+margin-bottom:10px;
+}
+.nav-link{
+color:var(--text-light);
+}
+.nav-link:hover{
+color:var(--tertiary-color);
 }

@@ -56,11 +56,29 @@ function debounceQuery(extent) {
             "Original Street Address: {orig_address_no} {orig_address_street}<br>Municipality: {orig_city}<br>Primary Material: {prime_material}<br>Primary Function: {function_prime}<br>Place Description: {place_descript}<br>Source: 1902 Sanborn",
     };
     
+    const sizeVV = {
+        type: "size",
+
+        valueExpression: "$view.scale",
+
+        stops: [
+          { size: 12, value: 70 },
+          { size: 9, value: 564 },
+          { size: 5, value: 4513 },
+          { size: 4, value: 36111 },
+          { size: 2, value: 144447},
+          { size: 1, value: 4622324},
+        ],
+      };
+    
+    
     const points = {
-    type: "unique-value",
-    field: "prime_material",
-    uniqueValueInfos: [{
-        value: "wood frame",
+    //type: "unique-value",
+    type: "simple",
+    //field: "prime_material",
+    visualVariables: [sizeVV],
+    //uniqueValueInfos: [{
+        //value: "wood frame",
         symbol: {
             type: "simple-marker", // Added type
             style: "circle",
@@ -74,24 +92,27 @@ function debounceQuery(extent) {
                 width: 1
             }
         }
-    },
-        {
-        value: "brick", 
-        symbol: {
-            type: "simple-marker",
-            style: "circle",
-            color: "#bfa87c",
-            size: 7.0,
-            angle: 0.0,
-            xoffset: 0,
-            yoffset: 0,
-            outline: {
-                color: "#660000",
-                width: 1
-            }
-        }
-    }]
-};
+    //},
+    };
+        //{
+        //value: "brick", 
+        //symbol: {
+            //type: "simple-marker",
+            //style: "circle",
+            //color: "#bfa87c",
+            //size: 7.0,
+            //angle: 0.0,
+            //xoffset: 0,
+            //yoffset: 0,
+            //outline: {
+                //color: "#660000",
+                //width: 1
+            //}
+        //}
+    //}]
+//};
+  
+
     
 //const points = {
     //type: "unique-value",
@@ -166,6 +187,14 @@ function debounceQuery(extent) {
     
     function queryPoints(searchText) {
        const pointListElement = document.getElementById("point-list");
+       
+         if (!searchText) {
+        // Reset to default state
+        pointListElement.innerHTML = `<li id="defaultPointOption" value="undefined" class="list-group-item">Use the search bar or date range slider.</li>`;
+        pointsCounter.innerHTML = `Places`;
+        return; 
+    }
+       
     pointListElement.innerHTML = ''; // Clear the list
 
     // Start with a default WHERE clause that selects all features
@@ -195,7 +224,7 @@ function debounceQuery(extent) {
             return addressA.localeCompare(addressB);
         });
         
-        pointsCounter.innerHTML = `Points (${sortedFeatures.length})`;
+        pointsCounter.innerHTML = `Places (${sortedFeatures.length})`;
 
         if (sortedFeatures.length === 0) {
             const noResultsItem = document.createElement("li");
@@ -293,7 +322,7 @@ searchButton.addEventListener('click', () => {
         collapseIcon.style.display = "block";
         expandIcon.style.display = "none";
 });
-queryPoints(searchBar.value.trim());
+//queryPoints(searchBar.value.trim());
     // Add an event listener for the 'input' event
 //searchBar.addEventListener('input', (event) => {
   // Access the current value of the input field
@@ -340,6 +369,7 @@ viewElement.view.on("click", (event) => {
         collapseIcon.style.display = "block";
         expandIcon.style.display = "none";
         
+        $('#pointsCounter').tab('show');
         
     } else {
         pointsInfo.innerHTML = "No points selected";
@@ -487,9 +517,9 @@ if (searchText) {
 
 							//const option = document.createElement("calcite-option");
 							const option = document.createElement("li");
-						option.innerHTML = `<h3>${year} ${title}</h3>
+						option.innerHTML = `${year} ${title}<!--<h3>${year} ${title}</h3>
 						${feature.attributes.source_description}. Published by ${feature.attributes.publisher} in ${year}. Author ${feature.attributes.author} and cartographer ${feature.attributes.cartographer_surveyor}. Courtesy of ${feature.attributes.orig_repository}.
-						<!--<br>
+						<br>
         <b>Publisher:</b> ${feature.attributes.publisher}<br>
         <b>Author:</b> ${feature.attributes.author}<br>
         <b>Cartographer/Surveyor:</b> ${feature.attributes.cartographer_surveyor}<br>

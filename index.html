@@ -47,6 +47,7 @@
             <a class="dropdown-item" target="_blank" href="https://lyre.cofc.edu/portal/apps/sites/#/shoc/pages/about-the-project">About the Project</a>
             <a class="dropdown-item" target="_blank" href="https://lyre.cofc.edu/portal/apps/sites/#/shoc/pages/about-the-maps">About the Maps</a>
             <a class="dropdown-item" target="_blank" href="https://lyre.cofc.edu/portal/apps/sites/#/shoc/pages/about-the-project">Meet the Team</a>
+            <a class="dropdown-item" target="_blank" href="#">Access the Data</a>
         </div>
     </div>
 </nav>
@@ -63,7 +64,7 @@
 <!-- <div id="slider-container" class="w-100 col-md-3 h-100 py-1" ><label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range
         <calcite-slider class="w-100 h-50" id="dateSlider" min-value="1670" max-value="1950" min="1670" max="1950" label-handles></calcite-slider>
 	</label></div>-->
-<div id="date-slider-container" class="w-100 col-md-4 h-100 py-1">
+<div id="date-slider-container" class="w-100 col-md-6 h-100 py-1">
     <label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range</label>
     <div class="row w-100 d-inline-flex align-items-center">
         <span id="dateMinValue" class="slider-value-left">1670</span>
@@ -91,6 +92,7 @@
     <calcite-menu-item type="radio" text="Removed" label="removed" icon-start="locator"></calcite-menu-item>
     <calcite-menu-item type="radio" active text="Everything" id="defaultFilter" label="both" icon-start="globe"></calcite-menu-item>
 </calcite-menu>-->
+
 <div id="pointsFilter" role="group" aria-label="People and Places Menu" class="button1 btn-group btn-group-toggle h-100 menu-end">
     <label class="btn button1 text-center d-flex align-items-center rounded-0" for="brick">
         <input type="radio" class="btn-check" name="btnradio" id="brick" autocomplete="off">
@@ -115,28 +117,39 @@
 
 <div class="h-86">
 	<div id="feature-node">
-	<div id="resultsDiv"><h1>Search Results</h1>
-	<h2 id="mapsCounter">Maps</h2>
+	<ul class="nav nav-tabs nav-fill" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link" id="pointsCounter" data-toggle="tab" href="#resultsDiv" role="tab" aria-controls="resultsDiv" aria-selected="false">Places</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="mapsCounter" data-toggle="tab" href="#selectedDiv" role="tab" aria-controls="selectedDiv" aria-selected="false">Maps</a>
+  </li>
+</ul>
+
+<div class="tab-content">
+	<div class="tab-pane fade" id="resultsDiv" role="tabpanel" aria-labelledby="pointsCounter"><h2>Results</h2>
+	<div class="resultBox">
+	<ul id="point-list" class="list-group">
+	<li id="defaultPointOption"
+	value="1=0" class="list-group-item">Use the search bar or date range slider.</li>
+	</ul></div>
+	<hr>
+	<div class="selectedBox rounded" id="pointsInfo">No point selected</div>
+	
+	</div>
+
+	<div id="selectedDiv" class="tab-pane fade" role="tabpanel" aria-labelledby="mapsCounter"><h2>Results</h2>
+	
 	<div class="resultBox">
 	<ul id="result-list" class="list-group">
 	<li id="defaultOption"
 	value="1=0" class="list-group-item"><h3>No Map</h3></li>
 	</ul></div>
-	
-	<h2 id="pointsCounter">Points</h2>
-	<div class="resultBox">
-	<ul id="point-list" class="list-group">
-	<li id="defaultPointOption"
-	value="1=0" class="list-group-item"><h3>No Points</h3></li>
-	</ul></div>
-	</div>
 	<hr>
-	<h1>Selected</h1>
-	<h2>Points</h2><div class="selectedBox rounded" id="pointsInfo">No point selected</div>
+	<div class="selectedBox rounded" id="mapsInfo">No map selected</div>
 	
-	<h2>Maps</h2><div class="selectedBox rounded" id="mapsInfo">No map selected</div>
 	</div>
-	
+	</div></div>
 	<div class="expandButton">
     <button type="button" id="expandCollapse" class="button2 collapser btn nav-item rounded-0 d-flex align-items-center" data-expanded="false">
         <svg id="expand-icon" style="display: block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">

@@ -143,8 +143,8 @@ hr {
 }
 
 .button1 > .active {
-    background-color: var(--neutral-light) !important;
-    color: var(--text-light) !important;
+    background-color: var(--neutral-light) ; !important;
+    color: var(--text-light) ; !important;
 }
 
 .button1 > label:hover {
@@ -164,7 +164,7 @@ hr {
 /* Hover effect for appended buttons */
 .input-group-append > .button2:hover {
     background-color: var(--primary-color);
-    color: var(--text-dark) !important;
+    color: var(--text-dark) ; !important;
 }
 
 /* Icon styling within a span element (Calcite-icon wrapper) */
@@ -250,14 +250,14 @@ arcgis-map {
 
 /* Active/selected item in a list group */
 .list-group > .active {
-    background-color: var(--tertiary-color) !important;
-    color: var(--text-dark) !important;
+    background-color: var(--tertiary-color) ; !important;
+    color: var(--text-dark) ; !important;
 }
 
 /* Hover state for list group items */
 .list-group-item:hover {
-    background-color: var(--secondary-color) !important;
-    color: var(--text-dark) !important;
+    background-color: var(--secondary-color) ; !important;
+    color: var(--text-dark) ; !important;
 }
 
 /* Styles for the box displaying selected items */

@@ -1,7 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-   		<meta charset="utf-8" />
+<html>
+	<head>
+		<meta charset="utf-8" />
  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
 		<title>SHOC Desktop - side panel experiment</title>
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
@@ -23,23 +22,22 @@
 
 		<!-- Load Map components from CDN-->
 		<script type="module" src="https://js.arcgis.com/4.33/map-components/"></script>
-</head>
+	</head>
 
-<body>
 	<body>	
-	<nav class="row d-flex navbar h-7" id="navRow1">
+<nav class="row d-flex navbar h-7" id="navRow1">
     <h1 class="navbar-brand logo-title">
-        <img src="shoc_logo.jpg" alt="SHOC Logo" class="logo d-inline-block align-center">SHOC Desktop Version
+        <img src="https://i.imgur.com/4l3a4n1.jpeg" alt="SHOC Logo" class="logo d-inline-block align-center">SHOC Desktop Version
     </h1>
 
-    <div id="slider-container" class="w-100 col-md-8 h-100 align-content-center">
-        <label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Opacity
-            <div class="slider-wrapper">
-                <input type="range" min="0" max="100" value="100" class="rangeSlider w-100 h-50" id="sliderDiv">
-                <span id="rangeValue" class="slider-value">100%</span>
-            </div>
-        </label>
-    </div>
+<div id="slider-container" class="w-100 col-md-8 h-100 align-content-center">
+    <label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Opacity
+        <div class="slider-wrapper">
+            <input type="range" min="0" max="100" value="100" class="rangeSlider w-100 h-50" id="sliderDiv">
+            <span id="rangeValue" class="slider-value">100%</span>
+        </div>
+    </label>
+</div>
 
     <div class="dropdown menu-end">
         <button type="button" id="navbarDropdownMenuLink" class="button2 collapser h-100 btn nav-item rounded-0" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -53,126 +51,144 @@
         </div>
     </div>
 </nav>
+	
+	<nav class="row d-flex navbar h-7 justify-content-between" id="navRow2">
+	<!--<calcite-input class="pl-2 justify-item-start" icon="search" suffix-text= "Search" placeholder="Doesn't work yet"></calcite-input>-->
+	<div class="input-group col-3 menu-end">
+  <input id="searchBar" type="text" class="form-control rounded-0" placeholder="Search maps and points" aria-label="keyword" aria-describedby="basic-addon2">
+  <div class="input-group-append">
+    <button id="searchButton" class="button2 h-100 btn rounded-0" type="button">Search</button>
+  </div>
+</div>
 
-<nav class="row d-flex navbar h-7 justify-content-between" id="navRow2">
-    <div class="input-group col-3 menu-end">
-        <input id="searchBar" type="text" class="form-control rounded-0" placeholder="Search maps and points" aria-label="keyword" aria-describedby="basic-addon2">
-        <div class="input-group-append">
-            <button id="searchButton" class="button2 h-100 btn rounded-0" type="button">Search</button>
+<!-- <div id="slider-container" class="w-100 col-md-3 h-100 py-1" ><label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range
+        <calcite-slider class="w-100 h-50" id="dateSlider" min-value="1670" max-value="1950" min="1670" max="1950" label-handles></calcite-slider>
+	</label></div>-->
+<div id="date-slider-container" class="w-100 col-md-6 h-100 py-1">
+    <label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range</label>
+    <div class="row w-100 d-inline-flex align-items-center">
+        <span id="dateMinValue" class="slider-value-left">1670</span>
+        <div class="range-slider-wrap" id="dateSlider">
+            <input type="range" min="1670" max="1950" value="1670" class="rangeSlider_l" id="dateSlider_l">
+            <input type="range" min="1670" max="1950" value="1950" class="rangeSlider_r" id="dateSlider_r">
         </div>
+        <span id="dateMaxValue" class="slider-value-right">1950</span>
     </div>
+</div>
+	
+	
+	<div class="button2 d-flex align-items-center h-100 menu-end"><div class="px-2">
+	<calcite-label layout="inline">
+        <calcite-switch value="True" checked></calcite-switch>
+        <calcite-icon icon="pin-tear"/>
+    </calcite-label></div>
+    
+            <!--<calcite-menu id="pointsFilter" label="People and Places Menu" class="h-100 nav-item menu-end">
+                            <calcite-menu-item text="People" value="people" icon-start="user"></calcite-menu-item>
+                <calcite-menu-item text="Places" value="places" icon-start="locator"></calcite-menu-item>
+                <calcite-menu-item active text="Everything" value="both" icon-start="globe"></calcite-menu-item>
+    <calcite-menu-item type="radio" text="National Historic Landmark" label="NHL" icon-start="user"></calcite-menu-item>
+    <calcite-menu-item type="radio" text="National Register of Historic Places" label="NRHP" icon-start="locator"></calcite-menu-item>
+    <calcite-menu-item type="radio" text="Removed" label="removed" icon-start="locator"></calcite-menu-item>
+    <calcite-menu-item type="radio" active text="Everything" id="defaultFilter" label="both" icon-start="globe"></calcite-menu-item>
+</calcite-menu>-->
 
-    <div id="date-slider-container" class="w-100 col-md-6 h-100 py-1">
-        <label class="row w-100 d-inline-flex justify-content-center align-content-center">Historic Map Date Range</label>
-        <div class="row w-100 d-inline-flex align-items-center">
-            <span id="dateMinValue" class="slider-value-left">1670</span>
-            <div class="range-slider-wrap" id="dateSlider">
-                <input type="range" min="1670" max="1950" value="1670" class="rangeSlider_l" id="dateSlider_l">
-                <input type="range" min="1670" max="1950" value="1950" class="rangeSlider_r" id="dateSlider_r">
-            </div>
-            <span id="dateMaxValue" class="slider-value-right">1950</span>
-        </div>
-    </div>
-
-    <div class="button2 d-flex align-items-center h-100 menu-end">
-        <div class="px-2">
-            <calcite-label layout="inline">
-                <calcite-switch value="True" checked></calcite-switch>
-                <calcite-icon icon="pin-tear"/>
-            </calcite-label>
-        </div>
-        
-        <div id="pointsFilter" role="group" aria-label="People and Places Menu" class="button1 btn-group btn-group-toggle h-100 menu-end">
-            <label class="btn button1 text-center d-flex align-items-center rounded-0" for="brick">
-                <input type="radio" class="btn-check" name="btnradio" id="brick" autocomplete="off">
-                <span class="d-flex align-items-center">
-                    <calcite-icon icon="user"></calcite-icon>Brick
-                </span>
-            </label>
-            <label class="btn text-center d-flex align-items-center rounded-0" for="wood">
-                <input type="radio" class="btn-check" name="btnradio" id="wood" autocomplete="off">
-                <span class="d-flex align-items-center">
-                    <calcite-icon icon="locator"></calcite-icon>Wood
-                </span>
-            </label>
-            <label class="btn active text-center d-flex align-items-center rounded-0" for="both">
-                <input type="radio" class="btn-check" name="btnradio" id="both" autocomplete="off" checked>
-                <span class="d-flex align-items-center">
-                    <calcite-icon icon="globe"></calcite-icon>Everything
-                </span>
-            </label>
-        </div>
-    </div>
-</nav>
+<div id="pointsFilter" role="group" aria-label="People and Places Menu" class="button1 btn-group btn-group-toggle h-100 menu-end">
+    <label class="btn button1 text-center d-flex align-items-center rounded-0" for="brick">
+        <input type="radio" class="btn-check" name="btnradio" id="brick" autocomplete="off">
+        <span class="d-flex align-items-center">
+           <calcite-icon icon="user"></calcite-icon>Brick
+        </span>
+    </label>
+    <label class="btn text-center d-flex align-items-center rounded-0" for="wood">
+        <input type="radio" class="btn-check" name="btnradio" id="wood" autocomplete="off">
+        <span class="d-flex align-items-center">
+            <calcite-icon icon="locator"></calcite-icon>Wood
+        </span>
+    </label>
+    <label class="btn active text-center d-flex align-items-center rounded-0" for="both">
+        <input type="radio" class="btn-check" name="btnradio" id="both" autocomplete="off" checked>
+        <span class="d-flex align-items-center">
+            <calcite-icon icon="globe"></calcite-icon>Everything
+        </span>
+    </label>
+</div>
+	</nav>
 
 <div class="h-86">
-    <div id="feature-node">
-        <ul class="nav nav-tabs nav-fill" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link" id="pointsCounter" data-toggle="tab" href="#resultsDiv" role="tab" aria-controls="resultsDiv" aria-selected="false">Places</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="mapsCounter" data-toggle="tab" href="#selectedDiv" role="tab" aria-controls="selectedDiv" aria-selected="false">Maps</a>
-            </li>
-        </ul>
+	<div id="feature-node">
+	<ul class="nav nav-tabs nav-fill" role="tablist">
+  <li class="nav-item">
+    <a class="nav-link" id="pointsCounter" data-toggle="tab" href="#resultsDiv" role="tab" aria-controls="resultsDiv" aria-selected="false">Places</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="mapsCounter" data-toggle="tab" href="#selectedDiv" role="tab" aria-controls="selectedDiv" aria-selected="false">Maps</a>
+  </li>
+</ul>
 
-        <div class="tab-content">
-            <div class="tab-pane fade" id="resultsDiv" role="tabpanel" aria-labelledby="pointsCounter">
-                <h2>Results</h2>
-                <div class="resultBox">
-                    <ul id="point-list" class="list-group">
-                        <li id="defaultPointOption" value="1=0" class="list-group-item">Use the search bar or date range slider.</li>
-                    </ul>
-                </div>
-                <hr>
-                <div class="selectedBox rounded" id="pointsInfo">No point selected</div>
-            </div>
+<div class="tab-content">
+	<div class="tab-pane fade" id="resultsDiv" role="tabpanel" aria-labelledby="pointsCounter"><h2>Results</h2>
+	<div class="resultBox">
+	<ul id="point-list" class="list-group">
+	<li id="defaultPointOption"
+	value="1=0" class="list-group-item">Use the search bar or date range slider.</li>
+	</ul></div>
+	<hr>
+	<div class="selectedBox rounded" id="pointsInfo">No point selected</div>
+	
+	</div>
 
-            <div id="selectedDiv" class="tab-pane fade" role="tabpanel" aria-labelledby="mapsCounter">
-                <h2>Results</h2>
-                
-                <div class="resultBox">
-                    <ul id="result-list" class="list-group">
-                        <li id="defaultOption" value="1=0" class="list-group-item"><h3>No Map</h3></li>
-                    </ul>
-                </div>
-                <hr>
-                <div class="selectedBox rounded" id="mapsInfo">No map selected</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="expandButton">
-        <button type="button" id="expandCollapse" class="button2 collapser btn nav-item rounded-0 d-flex align-items-center" data-expanded="false">
-            <svg id="expand-icon" style="display: block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/>
-                <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/>
-            </svg>
-            <svg id="collapse-icon" style="display: none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
-                <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-                <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
-            </svg>
-        </button>
-    </div>
-    
-    <arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "13">
-        <arcgis-zoom position="top-right"></arcgis-zoom>
-        <arcgis-home position="top-right"></arcgis-home>
-        <arcgis-locate position="top-right" scale="500"></arcgis-locate>
-        <arcgis-scale-bar
-            position="bottom-left"
-            bar-style="ruler"
-            unit="imperial"
-        ></arcgis-scale-bar>
-        <arcgis-compass position="top-right"></arcgis-compass>
-        <arcgis-basemap-toggle position="bottom-right"></arcgis-basemap-toggle>
-
-        <arcgis-placement position="bottom-left">
-            <div class="map-floater">Right-click and drag to rotate map.</div>
-        </arcgis-placement>
-    </arcgis-map>
+	<div id="selectedDiv" class="tab-pane fade" role="tabpanel" aria-labelledby="mapsCounter"><h2>Results</h2>
+	
+	<div class="resultBox">
+	<ul id="result-list" class="list-group">
+	<li id="defaultOption"
+	value="1=0" class="list-group-item"><h3>No Map</h3></li>
+	</ul></div>
+	<hr>
+	<div class="selectedBox rounded" id="mapsInfo">No map selected</div>
+	
+	</div>
+	</div></div>
+	<div class="expandButton">
+    <button type="button" id="expandCollapse" class="button2 collapser btn nav-item rounded-0 d-flex align-items-center" data-expanded="false">
+        <svg id="expand-icon" style="display: block" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-list" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708"/>
+            <path fill-rule="evenodd" d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708"/>
+        </svg>
+        <svg id="collapse-icon" style="display: none" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chevron-double-right" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+            <path fill-rule="evenodd" d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0"/>
+        </svg>
+        <span class="ml-2">Points and Maps</span>
+    </button>
 </div>
-    </body>
+	
+<arcgis-map basemap="streets" center= "-79.939, 32.785" zoom= "13">
+	<arcgis-zoom position="top-right"></arcgis-zoom>
+	<arcgis-home position="top-right"></arcgis-home>
 
+	<arcgis-locate position="top-right" scale="500"></arcgis-locate>
+      <arcgis-scale-bar
+    position="bottom-left"
+    bar-style="ruler"
+    unit="imperial"
+  ></arcgis-scale-bar>
+	<!--<arcgis-search position="top-right"></arcgis-search>
+		<arcgis-placement position="top-right">
+				<calcite-select id="sqlSelect">
+					<calcite-option
+						id="defaultOption"
+						value="1=0"
+						label="Choose a point"></calcite-option>
+				</calcite-select>
+			</arcgis-placement>-->  <arcgis-compass position="top-right"></arcgis-compass>
+			<arcgis-basemap-toggle position="bottom-right"></arcgis-basemap-toggle>
+			  <arcgis-placement position="bottom-left">
+    <div class="map-floater">Right-click and drag to rotate map.</div>
+  </arcgis-placement>
+</arcgis-map></div>
+<!--</calcite-shell>-->
+	</body>
 <script src="app.js" type="module"></script>
 </html>

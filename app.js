@@ -1,4 +1,4 @@
-  // ====================================================================
+// ====================================================================
 // 1. VARIABLE DECLARATIONS (DOM Elements and ArcGIS Imports)
 // ====================================================================
 
@@ -41,7 +41,43 @@ let objectId; // Placeholder for selected feature OBJECTID
 let clickedGraphic = null; // Reference to the last clicked graphic on the map
 let currentHighlight = null; // Reference to the current highlight graphic
 let tileLayer; // Variable to hold the dynamically loaded TileLayer
+let pointsLayer;
 
+// === Points Layer Renderer Definition ===
+    
+// Define size visual variable for points (makes them smaller when zoomed out)
+const sizeVV = {
+    type: "size",
+    valueExpression: "$view.scale",
+    stops: [
+        { size: 12, value: 70 },
+        { size: 9, value: 564 },
+        { size: 5, value: 4513 },
+        { size: 4, value: 36111 },
+        { size: 2, value: 144447},
+        { size: 1, value: 4622324},
+    ],
+};
+    
+// Simple point renderer with visual size variable
+const points = {
+    type: "simple",
+    visualVariables: [sizeVV],
+    symbol: {
+        type: "simple-marker",
+        style: "circle",
+        color: "#660000",
+        size: 7.0,
+        angle: 0.0,
+        xoffset: 0,
+        yoffset: 0,
+        outline: {
+            color: "#bfa87c",
+            width: 1
+        }
+    }
+};
+    
 // ====================================================================
 // 2. ARCGIS VIEW READY HANDLER
 // (Initialization and Event Listeners that require a loaded view)
@@ -65,45 +101,10 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
         }, 500); // Wait 500ms after the user stops panning/zooming
     }
     
-    // === Points Layer Renderer Definition ===
-    
-    // Define size visual variable for points (makes them smaller when zoomed out)
-    const sizeVV = {
-        type: "size",
-        valueExpression: "$view.scale",
-        stops: [
-            { size: 12, value: 70 },
-            { size: 9, value: 564 },
-            { size: 5, value: 4513 },
-            { size: 4, value: 36111 },
-            { size: 2, value: 144447},
-            { size: 1, value: 4622324},
-        ],
-    };
-    
-    // Simple point renderer with visual size variable
-    const points = {
-        type: "simple",
-        visualVariables: [sizeVV],
-        symbol: {
-            type: "simple-marker",
-            style: "circle",
-            color: "#660000",
-            size: 7.0,
-            angle: 0.0,
-            xoffset: 0,
-            yoffset: 0,
-            outline: {
-                color: "#bfa87c",
-                width: 1
-            }
-        }
-    };
-    
     // === Points Layer Initialization ===
     
     // Initialize the FeatureLayer for the Sanborn 1902 points
-    const pointsLayer = new FeatureLayer({
+    pointsLayer = new FeatureLayer({
         url: "https://lyre.cofc.edu/server/rest/services/shoc/pl_sanborn1902/FeatureServer/0",
         outFields: ["prime_material", "function_prime", "place_descript", "orig_address_no", "orig_address_street", "orig_city"],
         renderer: points,
@@ -528,6 +529,7 @@ function displayResults(results) {
     // Remove the points layer temporarily for correct Z-ordering
     const existingPointsLayer = viewElement.map.layers.find(layer => layer.url && layer.url.includes("pl_sanborn1902"));
     if (existingPointsLayer) {
+    	const isPointsVisible = existingPointsLayer.visible; 
         viewElement.map.remove(existingPointsLayer);
     }
 
@@ -560,7 +562,8 @@ function displayResults(results) {
         url: "https://lyre.cofc.edu/server/rest/services/shoc/pl_sanborn1902/FeatureServer/0",
         outFields: ["prime_material", "function_prime", "place_descript", "orig_address_no", "orig_address_street", "orig_city"],
         renderer: points, // Reusing the defined renderer
-        id: "pointsLayer" // Give the layer an ID for easy referencing
+        id: "pointsLayer", // Give the layer an ID for easy referencing
+        visible: pointsSwitch.checked, 
     });
     viewElement.map.add(newPointsLayer, 1);
     
@@ -583,6 +586,7 @@ function displayResults(results) {
     viewElement.closePopup();
     viewElement.graphics.removeAll(); // Clear previous map boundary
     viewElement.graphics.addMany(results.features); // Add the new map boundary graphic
+    pointsLayer = newPointsLayer;
 }
 
 // Listener for Opacity Slider input

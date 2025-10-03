@@ -5,7 +5,7 @@
 | Defines the color palette and custom styling for third-party components.
 */
 :root {
-    /* Primary Color Palette */
+    /* Primary Color Palette (Active) */
     --primary-color: white;
     --secondary-color: #bfa87c;
     --tertiary-color: #efbb3c;
@@ -28,8 +28,6 @@
     --calcite-slider-handle-fill-color: #efbb3c;
     --calcite-switch-background-color-hover: #660000;
 }
-
----
 
 /*
 |--------------------------------------------------------------------------
@@ -82,8 +80,6 @@ hr {
     height: 86%;
 }
 
----
-
 /*
 |--------------------------------------------------------------------------
 | Navigation Bar (Navbar) Styles
@@ -95,13 +91,20 @@ hr {
     margin: 0;
 }
 
-/* Title and Logo */
+/* Original commented-out block preserved:
+.navbar, .navbar-brand > h1{
+    font-size: 18px; important!;
+}
+*/
+
+/* Logo Image Styling */
 .logo {
     height: 100%;
-    margin: 0 5 0 0; /* Top, Right, Bottom, Left margins */
+    margin: 0 5 0 0;
     object-fit: contain; /* Control how the image fits within its bounds */
 }
 
+/* Logo Text/Title Styling */
 .logo-title {
     font-family: "Caslon Pro";
     font-size: 25px; /* important! (as noted in original comment) */
@@ -113,12 +116,13 @@ hr {
     left: auto;
 }
 
+/* Utility class for menu alignment */
 .menu-end {
     margin-left: 0;
     margin-right: 0;
 }
 
-/* Top Navigation Row (e.g., containing logo/title) */
+/* Top Navigation Row Background */
 #navRow1 {
     background-color: var(--neutral-dark);
 }
@@ -127,12 +131,12 @@ hr {
     color: var(--text-light);
 }
 
-/* Secondary Navigation Row (e.g., for tabs/filters) */
+/* Secondary Navigation Row Background */
 #navRow2 {
     background-color: var(--neutral-light);
 }
 
-/* Button Group 1 Styles (e.g., toggle buttons) */
+/* Button Group 1 Styles (e.g., radio toggles) */
 .button1 > label {
     background-color: var(--primary-color);
     color: var(--text-dark);
@@ -157,10 +161,17 @@ hr {
     background-color: var(--primary-color);
 }
 
-/* Hover effect for buttons appended to an input group */
+/* Hover effect for appended buttons */
 .input-group-append > .button2:hover {
     background-color: var(--primary-color);
     color: var(--text-dark) !important;
+}
+
+/* Icon styling within a span element (Calcite-icon wrapper) */
+span > calcite-icon {
+    margin-right: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 /* Styles for navigation tabs */
@@ -175,15 +186,6 @@ hr {
 .nav-link:hover {
     color: var(--tertiary-color);
 }
-
-/* Icon styling within a span element */
-span > calcite-icon {
-    margin-right: 10px;
-    margin-top: auto;
-    margin-bottom: auto;
-}
-
----
 
 /*
 |--------------------------------------------------------------------------
@@ -210,33 +212,30 @@ arcgis-map {
     z-index: 1;
 }
 
+/* Map "floater" element (e.g., instruction text overlay) */
+.map-floater {
+    background-color: var(--text-light);
+}
+
+/* Hides the points filter section initially (used in JavaScript) */
+#pointsFilter {
+    display: none;
+}
+
 /* Button to expand/collapse the feature-node panel */
 .expandButton {
     z-index: 2;
     position: absolute;
 }
 
-/* This rule applies when feature-node is visible */
+/* Styles to adjust map and button position when sidebar is expanded */
 .h-86 #feature-node[style*="display: block"] + .expandButton {
-    /* Position button to the right of the 25vw panel */
-    left: 25vw;
+    left: 25vw; /* Position button to the right of the 25vw panel */
 }
 
-/* This rule shrinks the map when feature-node is visible */
 .h-86 #feature-node[style*="display: block"] ~ arcgis-map {
     width: 75vw; /* Shrink map to 75% when feature-node is visible */
 }
-
-.map-floater {
-    background-color: var(--text-light);
-}
-
-/* Hides the points filter section initially */
-#pointsFilter {
-    display: none;
-}
-
----
 
 /*
 |--------------------------------------------------------------------------
@@ -276,17 +275,31 @@ arcgis-map {
     margin-bottom: 10px;
 }
 
----
+/*
+|--------------------------------------------------------------------------
+| Scrollbar Customization (Webkit Browsers Only)
+|--------------------------------------------------------------------------
+*/
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: var(--tertiary-color);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
 
 /*
 |--------------------------------------------------------------------------
 | Custom Range Slider Styles (Single-Handle Slider)
 |--------------------------------------------------------------------------
-| These styles target the appearance of a standard HTML input type="range"
 */
 
+/* Styles for the slider track */
 .rangeSlider {
-    -webkit-appearance: none; /* Removes default WebKit styling */
+    -webkit-appearance: none;
     width: 100%;
     height: 5px;
     background: var(--text-light);
@@ -327,13 +340,10 @@ arcgis-map {
     cursor: pointer;
 }
 
----
-
 /*
 |--------------------------------------------------------------------------
-| Custom Dual-Handle Range Slider Styles (for overlay/track behavior)
+| Custom Dual-Handle Range Slider Styles
 |--------------------------------------------------------------------------
-| These styles are often used to manage two overlapping range inputs.
 */
 .range-slider-wrap {
     position: relative;
@@ -341,6 +351,7 @@ arcgis-map {
     flex-grow: 1; /* Allows the slider to take up available space */
 }
 
+/* Hidden inputs to create the dual-slider effect */
 .range-slider-wrap input {
     position: absolute;
     width: 100%;
@@ -430,23 +441,4 @@ arcgis-map {
     transform: translateX(-50%);
     white-space: nowrap;
     font-size: 1em;
-}
-
----
-
-/*
-|--------------------------------------------------------------------------
-| Scrollbar Customization
-|--------------------------------------------------------------------------
-| Note: These styles only work in WebKit-based browsers (Chrome, Safari, Edge).
-*/
-::-webkit-scrollbar {
-    -webkit-appearance: none;
-    width: 7px;
-}
-
-::-webkit-scrollbar-thumb {
-    border-radius: 4px;
-    background-color: var(--tertiary-color);
-    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
 }

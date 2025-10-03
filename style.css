@@ -1,187 +1,369 @@
-:root{
-  /* Primary Colors 
-  --primary-color: #ffc814ff;
-  --secondary-color: #53c7d6ff;
-  --text-light: white;
-  --text-dark: #1f2b2bff;
-  --neutral-light: #334747;
-  --neutral-dark: #1f2b2bff;*/
-  --primary-color: white;
-  --secondary-color: #bfa87c;
-  --text-light: #fefefe;
-  --text-dark: #1f2b2bff;
-  --neutral-light: #660000;
-  --neutral-dark: #79242f;
-  --tertiary-color: #efbb3c;
+/*
+|--------------------------------------------------------------------------
+| CSS Custom Properties (Variables)
+|--------------------------------------------------------------------------
+| Defines the color palette and custom styling for third-party components.
+*/
+:root {
+    /* Primary Color Palette (Active) */
+    --primary-color: white;
+    --secondary-color: #bfa87c;
+    --tertiary-color: #efbb3c;
 
-  /*calcite
-  --calcite-label-text-color:  #1f2b2bff;
-  --calcite-switch-background-color: white;
-  --calcite-switch-handle-background-color:  #1f2b2bff;
-  --calcite-slider-text-color:white;
-  --calcite-slider-track-fill-color:white;
-  --calcite-slider-handle-fill-color: #53c7d6ff;
-  --calcite-switch-background-color-hover: #ffc814ff;*/
-  --calcite-label-margin-bottom: 1px;
-  --calcite-label-text-color:  #1f2b2bff;
-  --calcite-switch-background-color: #fefefe;
-  --calcite-switch-handle-background-color:  #1f2b2bff;
-  --calcite-slider-text-color:#fefefe;
-  --calcite-slider-track-fill-color:#fefefe;
-  --calcite-slider-handle-fill-color: #efbb3c;
-  --calcite-switch-background-color-hover: #660000;
+    /* Text Colors */
+    --text-light: #fefefe;
+    --text-dark: #1f2b2bff;
+
+    /* Neutral/Background Colors (e.g., for navigation) */
+    --neutral-light: #660000;
+    --neutral-dark: #79242f;
+
+    /* Calcite Component Overrides (ArcGIS/Esri styling library) */
+    --calcite-label-margin-bottom: 1px;
+    --calcite-label-text-color: #1f2b2bff;
+    --calcite-switch-background-color: #fefefe;
+    --calcite-switch-handle-background-color: #1f2b2bff;
+    --calcite-slider-text-color: #fefefe;
+    --calcite-slider-track-fill-color: #fefefe;
+    --calcite-slider-handle-fill-color: #efbb3c;
+    --calcite-switch-background-color-hover: #660000;
 }
-body{
-	height: 100vh;
-	padding: 0;
- 	margin: 0;
- 	font-family: "avenir next";
+
+/*
+|--------------------------------------------------------------------------
+| Global / Base Styles
+|--------------------------------------------------------------------------
+*/
+body {
+    height: 100vh; /* Full viewport height */
+    padding: 0;
+    margin: 0;
+    font-family: "avenir next";
 }
-.navbar, .navbar-brand{
-  padding: 0;
-  margin: 0;
-}
-/*.navbar, .navbar-brand > h1{
-  font-size: 18px; important!;
-}*/
-.logo {
-	height: 100%;
-    margin: 0 5 0 0;
-    object-fit: contain; /* Optional: control how the image fits within its bounds */
-    }
-.logo-title{
+
+/* Base style for all H1 headings */
+h1 {
+    font-size: 25px;
     font-family: "Caslon Pro";
-    font-size: 25px; important!;
+    color: var(--text-light);
 }
+
+/* Base style for all H2 headings */
+h2 {
+    font-size: 20px;
+    color: var(--text-light);
+}
+
+/* Base style for all H3 headings */
+h3 {
+    font-size: 18px;
+    margin-bottom: 2px;
+}
+
+/* Base style for all labels */
+label {
+    color: var(--text-light);
+    margin-bottom: 0px;
+}
+
+/* Horizontal Rule style */
+hr {
+    background-color: var(--secondary-color);
+}
+
+/* Custom utility classes for height */
+.h-7 {
+    height: 7%;
+}
+
+.h-86 {
+    height: 86%;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Navigation Bar (Navbar) Styles
+|--------------------------------------------------------------------------
+*/
+.navbar,
+.navbar-brand {
+    padding: 0;
+    margin: 0;
+}
+
+/* Original commented-out block preserved:
+.navbar, .navbar-brand > h1{
+    font-size: 18px; important!;
+}
+*/
+
+/* Logo Image Styling */
+.logo {
+    height: 100%;
+    margin: 0 5 0 0;
+    object-fit: contain; /* Control how the image fits within its bounds */
+}
+
+/* Logo Text/Title Styling */
+.logo-title {
+    font-family: "Caslon Pro";
+    font-size: 25px; /* important! (as noted in original comment) */
+}
+
+/* Position dropdown menu to the right */
 .dropdown-menu-right {
     right: 0;
     left: auto;
 }
-.h-7{
-	height: 6%;
-}
-.h-86{
-	height:88%;
-}
-.menu-end{
-	margin-left:0;
-	margin-right:0;}
-#navRow1{
-	background-color:var(--neutral-dark);
-	
-}
-#navRow1 > h1{
-	color:var(--text-light);
-}
-#navRow2{
-	background-color:var(--neutral-light);
 
+/* Utility class for menu alignment */
+.menu-end {
+    margin-left: 0;
+    margin-right: 0;
 }
-.button1 > label{
-	background-color:var(--primary-color);
-	color: var(--text-dark);
+
+/* Top Navigation Row Background */
+#navRow1 {
+    background-color: var(--neutral-dark);
 }
-.button1 > .active{
-    background-color: var(--neutral-light) !important;
-    color: var(--text-light) !important;
+
+#navRow1 > h1 {
+    color: var(--text-light);
 }
-.button1 > label:hover{
-	background-color:var(--secondary-color);
+
+/* Secondary Navigation Row Background */
+#navRow2 {
+    background-color: var(--neutral-light);
 }
-.button2{
-	background-color:var(--secondary-color);
-	color: var(--text-dark);
+
+/* Button Group 1 Styles (e.g., radio toggles) */
+.button1 > label {
+    background-color: var(--primary-color);
+    color: var(--text-dark);
 }
-.collapser:hover{
-	background-color:var(--primary-color);
+
+.button1 > .active {
+    background-color: var(--neutral-light) ; !important;
+    color: var(--text-light) ; !important;
 }
-label{
-	color: var(--text-light);
-	margin-bottom: 0px;
+
+.button1 > label:hover {
+    background-color: var(--secondary-color);
 }
-.input-group-append > .button2:hover{
-	background-color:var(--primary-color);
-	color: var(--text-dark) !important;
+
+/* Button Group 2 Styles (e.g., standard buttons) */
+.button2 {
+    background-color: var(--secondary-color);
+    color: var(--text-dark);
 }
+
+.collapser:hover {
+    background-color: var(--primary-color);
+}
+
+/* Hover effect for appended buttons */
+.input-group-append > .button2:hover {
+    background-color: var(--primary-color);
+    color: var(--text-dark) ; !important;
+}
+
+/* Icon styling within a span element (Calcite-icon wrapper) */
 span > calcite-icon {
-	margin-right: 10px;
-	margin-top: auto;
-	margin-bottom: auto;
+    margin-right: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
+
+/* Styles for navigation tabs */
+.nav-tabs {
+    margin-bottom: 10px;
+}
+
+.nav-link {
+    color: var(--text-light);
+}
+
+.nav-link:hover {
+    color: var(--tertiary-color);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Layout and Map Styles
+|--------------------------------------------------------------------------
+*/
+
+/* Sidebar panel for feature details */
 #feature-node {
-        float: left;
-        height: 100%;
-        padding: 1em;
-        overflow: scroll;
-        display: none;
-        width: 25vw;
-        background-color:var(--neutral-dark);
-      }
-arcgis-map {
-	float: right;
-	width: 100vw;
-	height: 100%;
-	z-index: 1;
+    float: left;
+    height: 100%;
+    padding: 1em;
+    overflow: scroll;
+    display: none; /* Initially hidden */
+    width: 25vw; /* Takes up 25% of viewport width */
+    background-color: var(--neutral-dark);
 }
+
+/* Map component (ArcGIS Web Component) */
+arcgis-map {
+    float: right;
+    width: 100vw; /* Full width when feature-node is hidden */
+    height: 100%;
+    z-index: 1;
+}
+
+/* Map "floater" element (e.g., instruction text overlay) */
+.map-floater {
+    background-color: var(--text-light);
+}
+
+/* Hides the points filter section initially (used in JavaScript) */
+#pointsFilter {
+    display: none;
+}
+
+/* Button to expand/collapse the feature-node panel */
+.expandButton {
+    z-index: 2;
+    position: absolute;
+}
+
+/* Styles to adjust map and button position when sidebar is expanded */
+.h-86 #feature-node[style*="display: block"] + .expandButton {
+    left: 25vw; /* Position button to the right of the 25vw panel */
+}
+
+.h-86 #feature-node[style*="display: block"] ~ arcgis-map {
+    width: 75vw; /* Shrink map to 75% when feature-node is visible */
+}
+
+/*
+|--------------------------------------------------------------------------
+| List Group and Result Box Styles
+|--------------------------------------------------------------------------
+*/
+.list-group-item {
+    font-size: 14px;
+    padding: 8px;
+    background-color: var(--text-light);
+}
+
+/* Active/selected item in a list group */
+.list-group > .active {
+    background-color: var(--tertiary-color) ; !important;
+    color: var(--text-dark) ; !important;
+}
+
+/* Hover state for list group items */
+.list-group-item:hover {
+    background-color: var(--secondary-color) ; !important;
+    color: var(--text-dark) ; !important;
+}
+
+/* Styles for the box displaying selected items */
+.selectedBox {
+    background-color: var(--text-light);
+    font-size: 14px;
+    padding: 8px;
+}
+
+/* Common styles for both selected and result boxes */
+.selectedBox,
+.resultBox {
+    max-height: 35vh;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+}
+
+/*
+|--------------------------------------------------------------------------
+| Scrollbar Customization (Webkit Browsers Only)
+|--------------------------------------------------------------------------
+*/
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: var(--tertiary-color);
+    box-shadow: 0 0 1px rgba(255, 255, 255, 0.5);
+}
+
+/*
+|--------------------------------------------------------------------------
+| Custom Range Slider Styles (Single-Handle Slider)
+|--------------------------------------------------------------------------
+*/
+
 /* Styles for the slider track */
 .rangeSlider {
-  -webkit-appearance: none;
-  width: 100%;
-  height: 5px;
-  background: var(--text-light);
-  border-radius: 5px;
-  margin-top: 3px;
-  margin-bottom: 3px;
+    -webkit-appearance: none;
+    width: 100%;
+    height: 5px;
+    background: var(--text-light);
+    border-radius: 5px;
+    margin-top: 3px;
+    margin-bottom: 3px;
 }
 
 /* Styles for the slider thumb (for WebKit browsers like Chrome and Safari) */
 .rangeSlider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  height: 10px; /* Adjust this value to get the desired vertical centering */
-  width: 10px; /* Adjust this value to get the desired vertical centering */
-  border-radius: 50%;
-  background: var(--tertiary-color);
-  outline: 3px solid var(--secondary-color); /* Correct property name and value */
-  cursor: pointer;
-  margin-top: -4.5px;
+    -webkit-appearance: none;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    outline: 3px solid var(--secondary-color);
+    cursor: pointer;
+    margin-top: -4.5px; /* Centers the thumb vertically on the 5px track */
 }
 
 /* Styles for the slider thumb (for Firefox) */
 .rangeSlider::-moz-range-thumb {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  background: var(--tertiary-color);
-  outline: 3px solid var(--secondary-color);
-  cursor: pointer;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    outline: 3px solid var(--secondary-color);
+    cursor: pointer;
 }
 
 /* Styles for the slider thumb (for Edge) */
 .rangeSlider::-ms-thumb {
-  height: 10px;
-  width: 10px;
-  border-radius: 50%;
-  background: var(--tertiary-color);
-  outline: 3px solid var(--secondary-color);
-  cursor: pointer;
+    height: 10px;
+    width: 10px;
+    border-radius: 50%;
+    background: var(--tertiary-color);
+    outline: 3px solid var(--secondary-color);
+    cursor: pointer;
 }
+
+/*
+|--------------------------------------------------------------------------
+| Custom Dual-Handle Range Slider Styles
+|--------------------------------------------------------------------------
+*/
 .range-slider-wrap {
     position: relative;
     height: 10px;
     flex-grow: 1; /* Allows the slider to take up available space */
 }
 
+/* Hidden inputs to create the dual-slider effect */
 .range-slider-wrap input {
     position: absolute;
     width: 100%;
     height: 5px;
-    pointer-events: none;
+    pointer-events: none; /* Allows clicks to pass through to the track/lower element */
     -webkit-appearance: none;
     background: var(--text-light);
     border: none;
     border-radius: 5px;
 }
 
+/* Thumb styles for the dual-handle wrapper (WebKit) */
 .range-slider-wrap input::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 10px;
@@ -190,11 +372,12 @@ arcgis-map {
     background: var(--tertiary-color);
     outline: 3px solid var(--secondary-color);
     cursor: pointer;
-    pointer-events: all;
+    pointer-events: all; /* Re-enables pointer events on the thumb itself */
     z-index: 10;
     position: relative;
 }
 
+/* Thumb styles for the dual-handle wrapper (Firefox) */
 .range-slider-wrap input::-moz-range-thumb {
     height: 10px;
     width: 10px;
@@ -205,6 +388,7 @@ arcgis-map {
     pointer-events: all;
 }
 
+/* Thumb styles for the dual-handle wrapper (Edge) */
 .range-slider-wrap input::-ms-thumb {
     height: 10px;
     width: 10px;
@@ -215,12 +399,14 @@ arcgis-map {
     pointer-events: all;
 }
 
+/* Container for displaying min/max values next to the slider */
 .slider-display {
     display: flex;
     justify-content: space-between;
     width: 100%;
     margin-top: 5px;
 }
+
 .slider-value-left {
     margin-right: 5px; /* Adds space between min value and slider */
     color: var(--text-light);
@@ -230,6 +416,8 @@ arcgis-map {
     margin-left: 5px; /* Adds space between max value and slider */
     color: var(--text-light);
 }
+
+/* Date slider specific container alignment */
 #date-slider-container > .row:first-of-type {
     display: flex;
     justify-content: center;
@@ -241,6 +429,7 @@ arcgis-map {
     justify-content: center;
     align-items: center;
 }
+
 .slider-wrapper {
     position: relative;
     width: 100%;
@@ -248,73 +437,8 @@ arcgis-map {
 
 .slider-value {
     position: absolute;
-    top: -25px; /* Adjust this value to control how far above the slider the label appears */
+    top: -25px; /* Position above the slider */
     transform: translateX(-50%);
     white-space: nowrap;
     font-size: 1em;
-}
-.map-floater{
-background-color:var(--text-light);
-}
-.list-group > .active {
-background-color: var(--tertiary-color)!important;
-color: var(--text-dark)!important;
-}
-.list-group-item:hover {
-background-color: var(--secondary-color)!important;
-color: var(--text-dark)!important;
-}
-.expandButton{
-z-index: 2;
-position: absolute;
-}
-
-/* This rule applies when feature-node is visible */
-.h-86 #feature-node[style*="display: block"] + .expandButton {
-    left: 25vw; /* Position button to the right of the 25vw panel */
-}
-
-.h-86 #feature-node[style*="display: block"] ~ arcgis-map {
-    width: 75vw; /* Shrink map to 75% when feature-node is visible */
-}
-h1{
-font-size: 25px;
-font-family: "Caslon Pro";
-color:var(--text-light);
-}
-h2{
-font-size: 20px;
-color:var(--text-light);
-}
-h3{
-font-size: 18px;
-margin-bottom: 2px;
-}
-#result-list>li{
-font-size: 14px;
-padding: 8px;
-background-color:var(--text-light);
-}
-.selectedBox{
-background-color:var(--text-light);
-font-size: 14px;
-padding: 8px;
-}
-.selectedBox, .resultBox{
-max-height: 22vh;
-overflow-y: scroll;
-margin-bottom: 10px;
-}
-::-webkit-scrollbar {
-  -webkit-appearance: none;
-  width: 7px;
-}
-
-::-webkit-scrollbar-thumb {
-  border-radius: 4px;
-  background-color: var(--tertiary-color);
-  box-shadow: 0 0 1px rgba(255, 255, 255, .5);
-}
-hr{
-background-color: var(--secondary-color);
 }

@@ -320,7 +320,7 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
 
 // Define the FeatureLayer for historic map index (static layer)
 const parcelLayer = new FeatureLayer({
-    url: "https://portal1-geo.sabu.mtu.edu/server/rest/services/Hosted/map_index/FeatureServer/0",
+    url: "https://lyre.cofc.edu/server/rest/services/shoc/map_index/FeatureServer/0",
 });
 
 // Function to query historic map features based on extent, year range, and search text
@@ -341,23 +341,24 @@ function queryCount(extent) {
     if (searchText) {
         searchStrings.push(`(
             Upper(title) LIKE '%${searchText.toUpperCase()}%' OR
-            Upper(source_description) LIKE '%${searchText.toUpperCase()}%' OR
+            Upper(source_caption) LIKE '%${searchText.toUpperCase()}%' OR
             mapyear LIKE '%${searchText}%' OR
             Upper(publisher) LIKE '%${searchText.toUpperCase()}%' OR
-            Upper(author) LIKE '%${searchText.toUpperCase()}%' OR
-            Upper(cartographer_surveyor) LIKE '%${searchText.toUpperCase()}%' OR
-            Upper(orig_repository) LIKE '%${searchText.toUpperCase()}%'
+            Upper(map_author) LIKE '%${searchText.toUpperCase()}%' OR
+            Upper(cartographer) LIKE '%${searchText.toUpperCase()}%' OR
+            Upper(orig_reposistory) LIKE '%${searchText.toUpperCase()}%' OR
+            Upper(source_type) LIKE '%${searchText.toUpperCase()}%'
         )`);
         
         // Combine year filter with text filter
-        mapYearFilter = `${mapYearFilter} AND ${searchStrings}`;
+        mapYearFilter = `${mapYearFilter} AND ${searchStrings.join(' ')}`;
     }
 
     const parcelQuery = {
         where: mapYearFilter,
         spatialRelationship: "intersects",
         geometry: extent,
-        outFields: ["title", "mapyear", "service_url", "source_description", "mapday", "mapmonth", "publisher", "author", "cartographer_surveyor", "orig_repository"],
+        outFields: ["title","cartographer", "mapyear", "service_url", "source_caption", "mapday", "mapmonth", "publisher", "map_author", "orig_reposistory","repository_url", "source_caption","source_type"],
         returnGeometry: true,
     };
 
@@ -496,8 +497,7 @@ function queryFeatureLayer(extent) {
         where: whereClause, // This is the service_url='...' clause
         spatialRelationship: "intersects",
         geometry: extent,
-        outFields: ["title", "mapyear", "service_url", "source_description", "mapday", "mapmonth", "publisher", "author", "cartographer_surveyor", "orig_repository"],
-        returnGeometry: true,
+        outFields:  ["title","cartographer", "mapyear", "service_url", "source_caption", "mapday", "mapmonth", "publisher", "map_author", "orig_reposistory","repository_url", "source_caption","source_type"],
     };
 
     parcelLayer
@@ -550,11 +550,12 @@ function displayResults(results) {
     mapsInfo.innerHTML = `<h3>${mapPrefix.mapyear} ${mapPrefix.title}</h3>
         <b>Title:</b> ${mapPrefix.title}<br>
         <b>Date:</b> ${mapPrefix.mapmonth}/${mapPrefix.mapday}/${mapPrefix.mapyear}<br>
-        <b>Description:</b> ${mapPrefix.source_description}<br>
+        <b>Source Type:</b> ${mapPrefix.source_type}<br>
+        <b>Description:</b> ${mapPrefix.source_caption}<br>
         <b>Publisher:</b> ${mapPrefix.publisher}<br>
-        <b>Author:</b> ${mapPrefix.author}<br>
-        <b>Cartographer/Surveyor:</b> ${mapPrefix.cartographer_surveyor}<br>
-        <b>Original Repository:</b> ${mapPrefix.orig_repository}<br>
+        <b>Author:</b> ${mapPrefix.map_author}<br>
+        <b>Cartographer/Surveyor:</b> ${mapPrefix.cartographer}<br>
+        <b>Original Repository:</b> <a href=${mapPrefix.repository}>${mapPrefix.orig_reposistory}</a><br>
         <a href=${mapPrefix.service_url}>View Service URL</a>`;
 
     // Re-add the points layer on top of the tile layer (at index 1)

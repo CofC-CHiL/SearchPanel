@@ -555,7 +555,7 @@ function displayResults(results) {
         <b>Publisher:</b> ${mapPrefix.publisher}<br>
         <b>Author:</b> ${mapPrefix.map_author}<br>
         <b>Cartographer/Surveyor:</b> ${mapPrefix.cartographer}<br>
-        <b>Original Repository:</b> <a href=${mapPrefix.repository}>${mapPrefix.orig_reposistory}</a><br>
+        <b>Original Repository:</b> <a href=${mapPrefix.repository_url}>${mapPrefix.orig_reposistory}</a><br>
         <a href=${mapPrefix.service_url}>View Service URL</a>`;
 
     // Re-add the points layer on top of the tile layer (at index 1)

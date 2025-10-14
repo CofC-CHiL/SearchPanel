@@ -6,6 +6,7 @@
 const opacityInput = document.getElementById('sliderDiv'); // Opacity range input for historic map
 const rangeOutput = document.getElementById('rangeValue'); // Opacity value display
 const viewElement = document.querySelector("arcgis-map"); // The main map component
+window.SHOC_VIEW = viewElement; 
 const dateSlider_l = document.getElementById('dateSlider_l'); // Left handle of the date range slider (min year)
 const dateSlider_r = document.getElementById('dateSlider_r'); // Right handle of the date range slider (max year)
 const dateMinValue = document.getElementById('dateMinValue'); // Min year display
@@ -31,6 +32,8 @@ const pointsInfo = document.getElementById('pointsInfo'); // Div to display sele
 // ArcGIS Imports & Layer-related Variables
 const FeatureLayer = await $arcgis.import("@arcgis/core/layers/FeatureLayer.js");
 const TileLayer = await $arcgis.import("@arcgis/core/layers/TileLayer.js");
+const webMercatorUtils = await $arcgis.import("@arcgis/core/geometry/support/webMercatorUtils.js");
+const Extent = await $arcgis.import("@arcgis/core/geometry/Extent.js");
 const defaultOption = document.querySelector("#defaultOption");
 const defaultPointOption = document.querySelector("#defaultPointOption");
 let whereClause = defaultOption.value; // Query string for historic map filter
@@ -42,6 +45,33 @@ let clickedGraphic = null; // Reference to the last clicked graphic on the map
 let currentHighlight = null; // Reference to the current highlight graphic
 let tileLayer; // Variable to hold the dynamically loaded TileLayer
 let pointsLayer;
+
+// Globally define the Zoom to Tile Layer Extent function
+window.zoomToTileLayerExtent = function () {
+    if (!tileLayer) {
+        console.warn("Cannot zoom: No historic map layer is currently loaded.");
+        return;
+    }
+
+    // Use tileLayer.when() to ensure the layer is loaded before accessing its extent.
+    // Use the layer's fullExtent property, NOT the unsupported queryExtent() method.
+    tileLayer.when(function() {
+        
+        // Ensure the fullExtent property exists (it's a Promise that resolves to the Extent object)
+        if (tileLayer.fullExtent) {
+            
+            // Go to the extent using the globally accessible view
+            window.SHOC_VIEW.view.goTo(tileLayer.fullExtent).catch((error) => {
+                console.error("Error zooming to full extent:", error);
+            });
+        } else {
+            console.error("Error: The tile layer does not report a valid full extent.");
+        }
+    }).catch(function(error) {
+        console.error("Error loading tile layer for zoom:", error);
+    });
+};
+
 
 // === Points Layer Renderer Definition ===
     
@@ -143,6 +173,9 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
             if (results.features.length > 0) {
                 const graphicToHighlight = results.features[0];
                 const attributes = graphicToHighlight.attributes;
+                const y = results.features[0].geometry.y;
+                const x = results.features[0].geometry.x;
+                const [long, lat] = webMercatorUtils.xyToLngLat(x, y);
                 
                 // Center the map on the selected point
                 viewElement.view.goTo(graphicToHighlight.geometry);
@@ -151,16 +184,17 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
                 viewElement.view.whenLayerView(pointsLayer).then(layerView => {
                     currentHighlight = layerView.highlight(graphicToHighlight);
                 });
-                
+            
                 // Populate the pointsInfo div
                 const contentHTML = `
-                    <h3>${attributes.orig_address_no} ${attributes.orig_address_street}</h3>
-                    <b>Original Street Address:</b> ${attributes.orig_address_no} ${attributes.orig_address_street}<br>
-                    <b>Municipality:</b> ${attributes.orig_city}<br>
-                    <b>Primary Material:</b> ${attributes.prime_material}<br>
-                    <b>Primary Function:</b> ${attributes.function_prime}<br>
-                    <b>Place Description:</b> ${attributes.place_descript}<br>
-                    <b>Source:</b> 1902 Sanborn
+                    <h3>${attributes.orig_address_no ?? '[No street number]'} ${attributes.orig_address_street ?? '[No street given]'}</h3>
+                    <b>Original Street Address:</b> ${attributes.orig_address_no ?? '[No street number]'} ${attributes.orig_address_street ?? '[No street given]'}<br>
+                    <b>Municipality:</b> ${attributes.orig_city ?? ''}<br>
+                    <b>Primary Material:</b> ${attributes.prime_material ?? ''}<br>
+                    <b>Primary Function:</b> ${attributes.function_prime ?? ''}<br>
+                    <b>Place Description:</b> ${attributes.place_descript ?? ''}<br>
+                    <b>Source:</b> 1902 Sanborn<br>
+                    <a href="javascript:void(0)" onclick="window.SHOC_VIEW.view.goTo({center: [${long}, ${lat}], zoom: 19}); return false;">Zoom to Point</a>
                 `;
                 document.getElementById('pointsInfo').innerHTML = contentHTML;
             }
@@ -179,18 +213,14 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
         viewElement.style.width="75vw";
         collapseIcon.style.display = "block";
         expandIcon.style.display = "none";
+        searchButton.innerHTML= "Clear";
     });
 
     // Listener for clicking the search button
     searchButton.addEventListener('click', () => {
-        queryCount(viewElement.extent);
-        queryPoints(searchBar.value.trim());
-        // Show/expand sidebar on search click
-        featureNode.style.display = "block";
-        featureNode.style.width= "25vw";
-        viewElement.style.width="75vw";
-        collapseIcon.style.display = "block";
-        expandIcon.style.display = "none";
+		searchBar.value = "";
+		searchButton.innerHTML= "Search";
+		debounceQuery(viewElement.extent);
     });
     
     // Listener for map click (hitTest for points)
@@ -199,6 +229,8 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
             if (response.results.length > 0) {
                 const graphic = response.results[0].graphic;
                 const prefix = graphic.attributes;
+                const lat = response.results[0].mapPoint.latitude;
+                const long = response.results[0].mapPoint.longitude;
                 
                 // Clear the previous highlight
                 if (currentHighlight) {
@@ -220,13 +252,14 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
                 // Populate the sidebar if a point feature was clicked
                 if (prefix.orig_city !== undefined) {
                     const contentHTML = `
-                        <h3>${prefix.orig_address_no} ${prefix.orig_address_street}</h3>
-                        <b>Original Street Address:</b> ${prefix.orig_address_no} ${prefix.orig_address_street}<br>
-                        <b>Municipality:</b> ${prefix.orig_city}<br>
-                        <b>Primary Material:</b> ${prefix.prime_material}<br>
-                        <b>Primary Function:</b> ${prefix.function_prime}<br>
-                        <b>Place Description:</b> ${prefix.place_descript}<br>
-                        <b>Source:</b> 1902 Sanborn
+                        <h3>${prefix.orig_address_no ?? '[No street number]'} ${prefix.orig_address_street ?? '[No street given]'}</h3>
+                        <b>Original Street Address:</b> ${prefix.orig_address_no ?? '[No street number]'} ${prefix.orig_address_street ?? '[No street given]'}<br>
+                        <b>Municipality:</b> ${prefix.orig_city ?? ''}<br>
+                        <b>Primary Material:</b> ${prefix.prime_material ?? ''}<br>
+                        <b>Primary Function:</b> ${prefix.function_prime ?? ''}<br>
+                        <b>Place Description:</b> ${prefix.place_descript ?? ''}<br>
+                        <b>Source:</b> 1902 Sanborn<br>
+                        <a href="javascript:void(0)" onclick="window.SHOC_VIEW.view.goTo({center: [${long}, ${lat}], zoom: 19}); return false;">Zoom to Point</a>
                     `;
                     pointsInfo.innerHTML = contentHTML;
                     
@@ -417,7 +450,8 @@ function queryPoints(searchText) {
             UPPER(orig_address_street) LIKE '%${searchText.toUpperCase()}%' OR
             UPPER(prime_material) LIKE '%${searchText.toUpperCase()}%' OR
             UPPER(function_prime) LIKE '%${searchText.toUpperCase()}%' OR
-            UPPER(place_descript) LIKE '%${searchText.toUpperCase()}%'
+            UPPER(place_descript) LIKE '%${searchText.toUpperCase()}%' OR
+            UPPER(orig_address_no || ' ' || orig_address_street) LIKE '%${searchText.toUpperCase()}%'
         )`;
     }
     
@@ -514,6 +548,8 @@ function queryFeatureLayer(extent) {
 function displayResults(results) {
     const service_url = results.features[0]?.attributes?.service_url;
     const mapPrefix = results.features[0]?.attributes;
+    //const extent = results.queryExtent();
+    //console.log(extent);
     
     if (!service_url) {
         console.error("No service_url found in feature attributes.");
@@ -543,20 +579,34 @@ function displayResults(results) {
     // Add the tile layer at index 0 (bottom)
     viewElement.map.add(tileLayer, 0);
     
+    //Concat date
+    const m = Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(mapPrefix.mapmonth));
+    let d = mapPrefix.mapday;
+
+	if (mapPrefix.mapday !== null && mapPrefix.mapday !== undefined) {
+		d = mapPrefix.mapday + ",";
+	}
+	
+    const date = [m, d, mapPrefix.mapyear]
+    	.filter(item => item !== null && item !== undefined)
+    	.join(" ");
+    
     // Show/expand the sidebar and display map info
     featureNode.style.display = "block";
     featureNode.style.width= "25vw";
     viewElement.style.width="75vw";
-    mapsInfo.innerHTML = `<h3>${mapPrefix.mapyear} ${mapPrefix.title}</h3>
-        <b>Title:</b> ${mapPrefix.title}<br>
-        <b>Date:</b> ${mapPrefix.mapmonth}/${mapPrefix.mapday}/${mapPrefix.mapyear}<br>
-        <b>Source Type:</b> ${mapPrefix.source_type}<br>
-        <b>Description:</b> ${mapPrefix.source_caption}<br>
-        <b>Publisher:</b> ${mapPrefix.publisher}<br>
-        <b>Author:</b> ${mapPrefix.map_author}<br>
-        <b>Cartographer/Surveyor:</b> ${mapPrefix.cartographer}<br>
-        <b>Original Repository:</b> <a href=${mapPrefix.repository_url}>${mapPrefix.orig_reposistory}</a><br>
-        <a href=${mapPrefix.service_url}>View Service URL</a>`;
+    mapsInfo.innerHTML = `<h3>${mapPrefix.mapyear ?? '[date unknown]'} ${mapPrefix.title ?? '[untitled]'}</h3>
+        <b>Title:</b> ${mapPrefix.title ?? '[untitled]'}<br>
+        <b>Date:</b> ${date}<br>
+        <b>Source Type:</b> ${mapPrefix.source_type ?? ''}<br>
+        <b>Description:</b> ${mapPrefix.source_caption ?? ''}<br>
+        <b>Publisher:</b> ${mapPrefix.publisher ?? ''}<br>
+        <b>Author:</b> ${mapPrefix.map_author ?? ''}<br>
+        <b>Cartographer/Surveyor:</b> ${mapPrefix.cartographer ?? ''}<br>
+        <b>Original Repository:</b> <a href=${mapPrefix.repository_url}>${mapPrefix.orig_reposistory ?? ''}</a><hr>
+        <a href=${mapPrefix.service_url}>View Service URL</a><br>
+        <a href="javascript:void(0)" onclick="window.zoomToTileLayerExtent(); return false;">Zoom to Map Extent</a>
+        `;
 
     // Re-add the points layer on top of the tile layer (at index 1)
     const newPointsLayer = new FeatureLayer({

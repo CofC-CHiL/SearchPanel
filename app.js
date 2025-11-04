@@ -46,6 +46,15 @@ let currentHighlight = null; // Reference to the current highlight graphic
 let tileLayer; // Variable to hold the dynamically loaded TileLayer
 let pointsLayer;
 
+//See if any variable is null
+function createStringIfNotNull(...variables) {
+    const dataPart = variables[1]; // e.g., concatAddress
+    if (dataPart === null || dataPart === undefined || dataPart.trim() === '') {
+        return null;
+    }
+    return variables.join('');
+}
+
 // Globally define the Zoom to Tile Layer Extent function
 window.zoomToTileLayerExtent = function () {
     if (!tileLayer) {
@@ -136,7 +145,7 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
     // Initialize the FeatureLayer for the Sanborn 1902 points
     pointsLayer = new FeatureLayer({
         url: "https://lyre.cofc.edu/server/rest/services/shoc/pl_sanborn1902/FeatureServer/0",
-        outFields: ["prime_material", "function_prime", "place_descript", "orig_address_no", "orig_address_street", "orig_city"],
+        outFields: ["prime_material", "function_prime", "place_descript", "orig_address_no", "orig_address_street", "orig_city", "place_source", "source_year"],
         renderer: points,
     });
     
@@ -167,7 +176,7 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
         // Query the feature to get geometry and attributes for centering/display
         pointsLayer.queryFeatures({
             where: `OBJECTID = ${objectId}`,
-            outFields: ["orig_address_no", "orig_address_street", "orig_city", "prime_material", "function_prime", "place_descript", "OBJECTID"],
+            outFields: ["orig_address_no", "orig_address_street", "orig_city", "prime_material", "function_prime", "place_descript", "place_source", "source_year", "OBJECTID"],
             returnGeometry: true
         }).then(results => {
             if (results.features.length > 0) {
@@ -184,19 +193,37 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
                 viewElement.view.whenLayerView(pointsLayer).then(layerView => {
                     currentHighlight = layerView.highlight(graphicToHighlight);
                 });
-            
+            	
+            	const concatAddress = [attributes.orig_address_no, attributes.orig_address_street]
+    				.filter(part => part) 
+   					.join(" ");
+               	const contentTitle = createStringIfNotNull(`<h3>`, attributes.orig_address_no, ` `, attributes.orig_address_street,`</h3>`);
+        		const sourcePlat = createStringIfNotNull(`<b>Source:</b> `, attributes.source_year, ` `,attributes.place_source,`<br>`);
+        		const origAdd = createStringIfNotNull(`<b>Original Address:</b> `, concatAddress,`<br>`);
+        		const altTitle = `<h3>${attributes.place_descript}</h3>`;
+        		const muni = createStringIfNotNull(`<b>Municipality:</b> `,attributes.orig_city,`<br>`);
+        		const primMat = createStringIfNotNull(`<b>Primary Material:</b> `,attributes.prime_material,`<br>`);
+        		const primFunc = createStringIfNotNull(`<b>Primary Function:</b> `,attributes.function_prime,`<br>`);
+        		const placeDesc = createStringIfNotNull(`<b>Place Description:</b> `,attributes.place_descript,`<br>`);
+            	
                 // Populate the pointsInfo div
                 const contentHTML = `
-                    <h3>${attributes.orig_address_no ?? '[No street number]'} ${attributes.orig_address_street ?? '[No street given]'}</h3>
-                    <b>Original Street Address:</b> ${attributes.orig_address_no ?? '[No street number]'} ${attributes.orig_address_street ?? '[No street given]'}<br>
-                    <b>Municipality:</b> ${attributes.orig_city ?? ''}<br>
-                    <b>Primary Material:</b> ${attributes.prime_material ?? ''}<br>
-                    <b>Primary Function:</b> ${attributes.function_prime ?? ''}<br>
-                    <b>Place Description:</b> ${attributes.place_descript ?? ''}<br>
-                    <b>Source:</b> 1902 Sanborn<br>
+                    ${contentTitle ?? altTitle}
+                    ${sourcePlat ?? ``}
+                	${origAdd ?? ``}
+                    ${muni ?? ``}
+                    ${primMat ?? ``}
+                    ${primFunc ?? ``}
+                    ${placeDesc ?? ``}
                     <a href="javascript:void(0)" onclick="window.SHOC_VIEW.view.goTo({center: [${long}, ${lat}], zoom: 19}); return false;">Zoom to Point</a>
                 `;
                 document.getElementById('pointsInfo').innerHTML = contentHTML;
+                featureNode.style.display = "block";
+				featureNode.style.width= "25vw";
+				viewElement.style.width="75vw";
+				collapseIcon.style.display = "block";
+				expandIcon.style.display = "none";
+				$('#pointsCounter').tab('show');
             }
         }).catch(error => {
             console.error("Error highlighting or populating feature:", error);
@@ -232,6 +259,18 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
                 const lat = response.results[0].mapPoint.latitude;
                 const long = response.results[0].mapPoint.longitude;
                 
+                const concatAddress = [prefix.orig_address_no, prefix.orig_address_street]
+    				.filter(part => part) 
+   					.join(" ");
+                const sourcePlat = createStringIfNotNull(`<b>Source:</b> `, prefix.source_year, ` `,prefix.place_source,`<br>`);
+                const contentTitle = createStringIfNotNull(`<h3>`, prefix.orig_address_no, ` `, prefix.orig_address_street,`</h3>`);
+                const origAdd = createStringIfNotNull(`<b>Original Address:</b> `, concatAddress,`<br>`);
+				const altTitle = `<h3>${prefix.place_descript}</h3>`;
+				const muni = createStringIfNotNull(`<b>Municipality:</b> `,prefix.orig_city,`<br>`);
+				const primMat = createStringIfNotNull(`<b>Primary Material:</b> `,prefix.prime_material,`<br>`);
+				const primFunc = createStringIfNotNull(`<b>Primary Function:</b> `,prefix.function_prime,`<br>`);
+				const placeDesc = createStringIfNotNull(`<b>Place Description:</b> `,prefix.place_descript,`<br>`);
+                
                 // Clear the previous highlight
                 if (currentHighlight) {
                     currentHighlight.remove();
@@ -251,15 +290,16 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
                 
                 // Populate the sidebar if a point feature was clicked
                 if (prefix.orig_city !== undefined) {
+					
                     const contentHTML = `
-                        <h3>${prefix.orig_address_no ?? '[No street number]'} ${prefix.orig_address_street ?? '[No street given]'}</h3>
-                        <b>Original Street Address:</b> ${prefix.orig_address_no ?? '[No street number]'} ${prefix.orig_address_street ?? '[No street given]'}<br>
-                        <b>Municipality:</b> ${prefix.orig_city ?? ''}<br>
-                        <b>Primary Material:</b> ${prefix.prime_material ?? ''}<br>
-                        <b>Primary Function:</b> ${prefix.function_prime ?? ''}<br>
-                        <b>Place Description:</b> ${prefix.place_descript ?? ''}<br>
-                        <b>Source:</b> 1902 Sanborn<br>
-                        <a href="javascript:void(0)" onclick="window.SHOC_VIEW.view.goTo({center: [${long}, ${lat}], zoom: 19}); return false;">Zoom to Point</a>
+                    	${contentTitle ?? altTitle}
+                    	${sourcePlat ?? ``}
+                		${origAdd ?? ``}
+                    	${muni ?? ``}
+                    	${primMat ?? ``}
+                    	${primFunc ?? ``}
+                    	${placeDesc ?? ``}
+                    	<a href="javascript:void(0)" onclick="window.SHOC_VIEW.view.goTo({center: [${long}, ${lat}], zoom: 19}); return false;">Zoom to Point</a>
                     `;
                     pointsInfo.innerHTML = contentHTML;
                     
@@ -458,7 +498,7 @@ function queryPoints(searchText) {
     // Query points to populate the list
     viewElement.map.layers.find(layer => layer.url.includes("pl_sanborn1902")).queryFeatures({
         where: whereClause,
-        outFields: ["orig_address_no", "orig_address_street", "place_descript", "OBJECTID"],
+        outFields: ["orig_address_no", "orig_address_street", "place_descript", "place_source", "source_year", "OBJECTID"],
         returnGeometry: false
     }).then(results => {
         // Sort features alphabetically by address
@@ -480,8 +520,16 @@ function queryPoints(searchText) {
             sortedFeatures.forEach(feature => {
                 const listItem = document.createElement("li");
                 const attributes = feature.attributes;
-                listItem.value = attributes.OBJECTID;
-                listItem.textContent = `${attributes.orig_address_no} ${attributes.orig_address_street}: ${attributes.place_descript}`;
+                
+				const addressPart = [attributes.orig_address_no, attributes.orig_address_street]
+    				.filter(part => part)
+    				.join(" ");
+				const fullTitle = addressPart 
+    				? `${addressPart}: ${attributes.place_descript ?? 'Details'}` 
+    				: attributes.place_descript; 
+
+				listItem.value = attributes.OBJECTID;
+				listItem.textContent = fullTitle ?? "[Unknown]";
                 listItem.className = "list-group-item";
                 pointListElement.appendChild(listItem);
             });
@@ -591,20 +639,26 @@ function displayResults(results) {
     	.filter(item => item !== null && item !== undefined)
     	.join(" ");
     
+	const platType = createStringIfNotNull(`<b>Source Type:</b> `,mapPrefix.source_type,`<br>`);
+    const platDesc = createStringIfNotNull(`<b>Description:</b> `,mapPrefix.source_caption,`<br>`);
+    const platPub = createStringIfNotNull(`<b>Publisher:</b> `,mapPrefix.publisher,`<br>`);
+    const platAuth = createStringIfNotNull(`<b>Author:</b> `,mapPrefix.map_author,`<br>`);
+    const platCart = createStringIfNotNull(`<b>Cartographer/Surveyor:</b> `, mapPrefix.cartographer,`<br>`);
+            
     // Show/expand the sidebar and display map info
     featureNode.style.display = "block";
     featureNode.style.width= "25vw";
     viewElement.style.width="75vw";
     mapsInfo.innerHTML = `<h3>${mapPrefix.mapyear ?? '[date unknown]'} ${mapPrefix.title ?? '[untitled]'}</h3>
         <b>Title:</b> ${mapPrefix.title ?? '[untitled]'}<br>
-        <b>Date:</b> ${date}<br>
-        <b>Source Type:</b> ${mapPrefix.source_type ?? ''}<br>
-        <b>Description:</b> ${mapPrefix.source_caption ?? ''}<br>
-        <b>Publisher:</b> ${mapPrefix.publisher ?? ''}<br>
-        <b>Author:</b> ${mapPrefix.map_author ?? ''}<br>
-        <b>Cartographer/Surveyor:</b> ${mapPrefix.cartographer ?? ''}<br>
-        <b>Original Repository:</b> <a href=${mapPrefix.repository_url}>${mapPrefix.orig_reposistory ?? ''}</a><hr>
-        <a href=${mapPrefix.service_url}>View Service URL</a><br>
+        <b>Date:</b> ${date ?? `[unknown]`}<br>
+        ${platType ?? ''}
+        ${platDesc ?? ''}
+        ${platPub ?? ''}
+        ${platAuth ?? ''}
+        ${platCart ?? ''}
+        <b>Original Repository:</b> <a target="_blank" href=${mapPrefix.repository_url}>${mapPrefix.orig_reposistory ?? ''}</a><hr>
+        <a target="_blank" href=${mapPrefix.service_url}>View Service URL</a><br>
         <a href="javascript:void(0)" onclick="window.zoomToTileLayerExtent(); return false;">Zoom to Map Extent</a>
         `;
 

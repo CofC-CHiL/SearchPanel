@@ -198,7 +198,11 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
     				.filter(part => part) 
    					.join(" ");
                	const contentTitle = createStringIfNotNull(`<h3>`, attributes.orig_address_no, ` `, attributes.orig_address_street,`</h3>`);
-        		const sourcePlat = createStringIfNotNull(`<b>Source:</b> `, attributes.source_year, ` `,attributes.place_source,`<br>`);
+        		const sourceData = [
+    				attributes.source_year ?? '', 
+    				attributes.place_source ?? ''
+					].filter(s => s).join(' ');
+				const sourcePlat = sourceData ? `<b>Source:</b> ${sourceData}<br>` : null;
         		const origAdd = createStringIfNotNull(`<b>Original Address:</b> `, concatAddress,`<br>`);
         		const altTitle = `<h3>${attributes.place_descript}</h3>`;
         		const muni = createStringIfNotNull(`<b>Municipality:</b> `,attributes.orig_city,`<br>`);
@@ -262,7 +266,11 @@ viewElement.addEventListener("arcgisViewReadyChange", () => {
                 const concatAddress = [prefix.orig_address_no, prefix.orig_address_street]
     				.filter(part => part) 
    					.join(" ");
-                const sourcePlat = createStringIfNotNull(`<b>Source:</b> `, prefix.source_year, ` `,prefix.place_source,`<br>`);
+                const sourceData = [
+    				prefix.source_year ?? '', 
+    				prefix.place_source ?? ''
+					].filter(s => s).join(' ');
+				const sourcePlat = sourceData ? `<b>Source:</b> ${sourceData}<br>` : null;
                 const contentTitle = createStringIfNotNull(`<h3>`, prefix.orig_address_no, ` `, prefix.orig_address_street,`</h3>`);
                 const origAdd = createStringIfNotNull(`<b>Original Address:</b> `, concatAddress,`<br>`);
 				const altTitle = `<h3>${prefix.place_descript}</h3>`;
